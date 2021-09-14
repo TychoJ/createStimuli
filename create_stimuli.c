@@ -72,6 +72,8 @@ int main(int argc, char const *argv[]) {
 
 	output = fopen(fileName, "a");
 	fprintf(output, "--\n--  gebruik dit als eigen declaratie\n--  constant %s : time := tijd(standaard 50ns);\n--\n", delay);
+	fprintf(output, "\n\n");
+	fprintf(output, "signal_generator: process is\nbegin");
 	fclose(output);
 
 	while(isFinished(binary, nbrStimuli)) {
@@ -89,7 +91,7 @@ int main(int argc, char const *argv[]) {
 		binary++;
 	}
 	output = fopen(fileName, "a");
-	fprintf(output, "  wait;");
+	fprintf(output, "  wait;\nend process signal_generator;");
 	return 0;
 }
 
