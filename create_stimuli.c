@@ -42,6 +42,7 @@
 #include <stdint.h>
 
 #define EXTENSION ".vhdl"
+
 int isFinished(uint64_t binary, int nbrStimuli);
 void writeStimuli(FILE *file, char *fileName, char **stimuli, int nbrStimuli, uint64_t binary, char *delay);
 
@@ -56,6 +57,10 @@ int main(int argc, char const *argv[]) {
 	char *delay;
 	fileName	= (char *)malloc( (strlen(argv[1]) + strlen(EXTENSION)) * sizeof(char));
 	delay 		= (char *)malloc( (strlen(argv[2]) + 1) * sizeof(char));
+	if(fileName == NULL || delay == NULL) {
+		printf("Not enough memory\n");
+		return EXIT_FAILURE;
+	}
 	strcpy(delay, argv[2]);
 	strcpy(fileName, argv[1]);
 	strcat(fileName, EXTENSION);
@@ -82,7 +87,7 @@ int main(int argc, char const *argv[]) {
 			printf("probleem met file\n");
 			exit(EXIT_FAILURE);
 		}
-		for(int i = 0; i < nbrStimuli; i++) {\
+		for(int i = 0; i < nbrStimuli; i++) {
 			fprintf(output, "  %s <= '%d';\n", argv[i + 3], !!(binary & (1ULL << i)));
 		}
 		fprintf(output, "  wait for %s;\n", delay);
@@ -103,28 +108,6 @@ int main(int argc, char const *argv[]) {
  *  \return 0 if all binary options are 1 else 0
  */
 int isFinished(uint64_t binary, int nbrStimuli) {
-	//for(int i = 0; i < nbrStimuli; i++) {
-	//	if(!(binary & (1ULL << i))) {
-	//		return 1;
-	//	}
-	//}
 	if(binary & (1ULL << nbrStimuli)) return 0;
 	return 1;
-}
-
-void writeStimuli(FILE *file, char *fileName, char **stimuli, int nbrStimuli, uint64_t binary, char *delay) {
-	file = fopen(fileName, "r");
-	if(file == NULL) {
-		printf("probleem met file\n");
-		exit(EXIT_FAILURE);
-	}
-	printf("test 1\n");
-	for(int i = 0; i < nbrStimuli; i++) {\
-		printf("test 2\n");
-		fprintf(file, "  %s <= '%d';\n", stimuli[i], !!(binary & (1 << i)));
-		printf("test 3\n");
-		fprintf(file, "  %s\n", delay);
-		printf("test 4\n");
-	}
-	fclose(file);
 }
