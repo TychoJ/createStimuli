@@ -43,7 +43,9 @@
 
 #define EXTENSION ".vhdl"
 
+// function prototypes 
 int isFinished(uint64_t binary, int nbrStimuli);
+int changedState(uint64_t binary, int bit);
 
 int main(int argc, char const *argv[]) {
 
@@ -77,7 +79,7 @@ int main(int argc, char const *argv[]) {
 	output = fopen(fileName, "a");
 	fprintf(output, "--\n--  gebruik dit als eigen declaratie\n--  constant %s : time := tijd(standaard 50 ns);\n--\n", delay);
 	fprintf(output, "\n\n");
-	fprintf(output, "signal_generator: process is\nbegin");
+	fprintf(output, "signal_generator: process is\nbegin\n");
 	fclose(output);
 
 	while(isFinished(binary, nbrStimuli)) {
@@ -87,7 +89,9 @@ int main(int argc, char const *argv[]) {
 			exit(EXIT_FAILURE);
 		}
 		for(int i = 0; i < nbrStimuli; i++) {
-			fprintf(output, "  %s <= '%d';\n", argv[i + 3], !!(binary & (1ULL << i)));
+			if(changedState(binary, i)) {
+				fprintf(output, "  %s <= '%d';\n", argv[i + 3], !!(binary & (1ULL << i)));
+			}
 		}
 		fprintf(output, "  wait for %s;\n", delay);
 		fclose(output);
@@ -108,5 +112,17 @@ int main(int argc, char const *argv[]) {
  */
 int isFinished(uint64_t binary, int nbrStimuli) {
 	if(binary & (1ULL << nbrStimuli)) return 0;
+	return 1;
+}
+
+/*! \brief  return if the signal will change state
+ *
+ *  \param  binary		binary options
+ *	\param	bit			the bit that will be checked
+ *
+ *  \return 0 if the signal stay's the same otherwise 1
+ */
+int changedState(uint64_t binary, int bit) {
+	if( (binary & (1ULL << bit)) == ((binary - 1) & (1ULL << bit)) ) return 0;
 	return 1;
 }
