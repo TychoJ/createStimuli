@@ -44,7 +44,6 @@
 #define EXTENSION ".vhdl"
 
 int isFinished(uint64_t binary, int nbrStimuli);
-void writeStimuli(FILE *file, char *fileName, char **stimuli, int nbrStimuli, uint64_t binary, char *delay);
 
 int main(int argc, char const *argv[]) {
 
