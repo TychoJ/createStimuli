@@ -76,7 +76,7 @@ int main(int argc, char const *argv[]) {
 	uint64_t binary = 0ULL;
 
 	output = fopen(fileName, "a");
-	fprintf(output, "--\n--  gebruik dit als eigen declaratie\n--  constant %s : time := tijd(standaard 50ns);\n--\n", delay);
+	fprintf(output, "--\n--  gebruik dit als eigen declaratie\n--  constant %s : time := tijd(standaard 50 ns);\n--\n", delay);
 	fprintf(output, "\n\n");
 	fprintf(output, "signal_generator: process is\nbegin");
 	fclose(output);
